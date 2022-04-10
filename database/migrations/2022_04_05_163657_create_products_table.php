@@ -17,11 +17,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->string('title');
-            $table->text('short_description');
-            $table->longText('description');
-            $table->longText('additional_info');
+            $table->string('slug');
+            $table->text('short_description')->nullable();
+            $table->longText('description')->nullable();
+            $table->longText('additional_info')->nullable();
             $table->decimal('price');
-            $table->decimal('sale_price');
+            $table->decimal('sale_price')->nullable();
             $table->integer('quantity');
             $table->text('photo');
             $table->integer('status')->default(1);

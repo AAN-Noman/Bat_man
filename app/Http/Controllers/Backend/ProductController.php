@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Models\Product;
-use App\Models\Category;
-use Illuminate\Http\Request;
 use App\Models\Size;
 use App\Models\Color;
+use App\Models\Product;
+use App\Models\Category;
+use Illuminate\Support\Str;
+
+use Illuminate\Http\Request;
+use App\Models\ProductGallery;
 
 use App\Http\Controllers\Controller;
 use function GuzzleHttp\Promise\all;
+use Illuminate\Auth\Events\Validated;
+use Intervention\Image\Facades\Image;
 
 class ProductController extends Controller
 {
@@ -44,7 +49,61 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+
+        $this->validate($request, [
+            "name" => 'required|unique:products,title',
+            "price" => 'numeric',
+            "sale_price" => 'numeric',
+            "categories" => 'required',
+            "size" => 'required',
+            "color" => 'required',
+            "photo" => 'required|mimes:png,jpg,gif,jpeg,webp|max:1024',
+        ]);
+
+
+        $photo = $request->file('photo');
+        if(!empty($photo)){
+
+            $photo_name = Str::slug($request->name)."_".time(). ".".$photo->getClientOriginalExtension();
+
+            $photo_upload =Image::make($photo)->crop(800, 609)->save(public_path('/storage/products/' . $photo_name));
+
+            $product = new Product();
+            $product->title = $request->name;
+            $product->slug = Str::slug($request->name);
+            $product->user_id = auth()->user()->id;
+            $product->short_description = $request->short_description;
+            $product->description = $request->description;
+            $product->additional_info = $request->additional_info;
+            $product->price = $request->price;
+            $product->sale_price = $request->sale_price;
+            $product->quantity = $request->quantity;
+            $product->photo = $photo_name;
+            $product->save();
+        }
+
+
+        if(isset($product->id)){
+
+            $gallery_photos = $request->file('gallery_photo');
+
+            foreach ($gallery_photos as $gallery_photo){
+                $gallery_name = Str::slug($request->name)."_".uniqid().".".$gallery_photo->getClientOriginalExtension();
+
+                $photo_upload =Image::make($gallery_photo)->crop(800, 609)->save(public_path('/storage/gallery_image/' . $gallery_name));
+
+                if($photo_upload){
+                    $gallery = new ProductGallery();
+                    $gallery->product_id = $product->id;
+                    $gallery->photo = $gallery_name;
+                    $gallery->save();
+                };
+            };
+        };
+
+
+
     }
 
     /**

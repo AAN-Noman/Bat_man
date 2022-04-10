@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Product extends Model
+class ProductGallery extends Model
 {
     use HasFactory, SoftDeletes;
     /**
@@ -14,5 +14,5 @@ class Product extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['name','short_description','description','additional_info','price','sale_price'.'quantity',"photo"]; // for before chanege
+    protected $fillable = ["photo"];
 }

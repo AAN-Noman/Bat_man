@@ -44,7 +44,7 @@
 
                                 <div class="col-md-6  form-group">
                                     <label>Quantity: </label>
-                                    <input type="text" class="form-control" name="quantiy" placeholder="Quantity" value="{{ old('quantiy') }}">
+                                    <input type="text" class="form-control" name="quantity" placeholder="Quantity" value="{{ old('quantity') }}">
                                 </div>
 
                                 <div class="col-md-6  form-group">
@@ -93,7 +93,7 @@
 
                                 <div class="col-md-12  form-group mb-4">
                                     <label>Gallery image: </label>
-                                    <input type="file" class='form-control' name='gallery_photo' multiple>
+                                    <input type="file" class='form-control' name='gallery_photo[]' multiple>
                                 </div>
 
                                 <div class="form-group row">
