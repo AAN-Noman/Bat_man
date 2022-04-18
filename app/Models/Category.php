@@ -15,4 +15,8 @@ class Category extends Model
      * @var array<int, string>
      */
     protected $fillable = ['name','parent','description','image','icon']; // for before chanege
+
+    public function products(){
+        return $this->belongsToMany(Product::class)->withTimestamps();
+    }
 }

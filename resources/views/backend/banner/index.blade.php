@@ -30,33 +30,35 @@
                                         <th class='colume-title'>Action</th>
                                     </tr>
                                 </thead>
-                                @forelse ($datas as $data)
-                                    <tr class="even pointer">
-                                        <td>{{ $data->id }}</td>
-                                        <td>
-                                            <img width="100" src="{{ asset('storage/banner/' . $data->photo) }}" alt="">
-                                        </td>
-                                        <td>{{ $data->banner_title }}</td>
-                                        <td>{{ Str::limit($data->description, 25, '...') }}</td>
-                                        <td>{{ $data->status == 1 ? 'Active' : 'Deactive' }}</td>
-                                        <td class="last">
-                                            <a href="{{ route('backend.banner.status', $data->id) }}"
-                                                class="btn btn-{{ $data->status == 1 ? 'warning' : 'success' }} btn-sm">
-                                                {{ $data->status == 1 ? 'Deactive' : 'Active' }}
-                                            </a>
-                                            <a href="{{ route('backend.banner.edit', $data->id) }}"
-                                                class="btn btn-primary btn-sm">View/Edit</a>
-                                            <form class='d-inline'
-                                                action="{{ route('backend.banner.destroy', $data->id) }}" method='POST'>
-                                                @csrf
-                                                @method("DELETE")
-                                                <button type="submit" class="btn btn-danger btn-sm">Delete </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @empty
-                                @endforelse
-
+                                <tbody>
+                                    @forelse ($datas as $data)
+                                        <tr class="even pointer">
+                                            <td>{{ $data->id }}</td>
+                                            <td>
+                                                <img width="100" src="{{ asset('storage/banner/' . $data->photo) }}"
+                                                    alt="">
+                                            </td>
+                                            <td>{{ $data->banner_title }}</td>
+                                            <td>{{ Str::limit($data->description, 25, '...') }}</td>
+                                            <td>{{ $data->status == 1 ? 'Active' : 'Deactive' }}</td>
+                                            <td class="last">
+                                                <a href="{{ route('backend.banner.status', $data->id) }}"
+                                                    class="btn btn-{{ $data->status == 1 ? 'warning' : 'success' }} btn-sm">
+                                                    {{ $data->status == 1 ? 'Deactive' : 'Active' }}
+                                                </a>
+                                                <a href="{{ route('backend.banner.edit', $data->id) }}"
+                                                    class="btn btn-primary btn-sm">View/Edit</a>
+                                                <form class='d-inline'
+                                                    action="{{ route('backend.banner.destroy', $data->id) }}"
+                                                    method='POST'>
+                                                    @csrf
+                                                    @method("DELETE")
+                                                    <button type="submit" class="btn btn-danger btn-sm">Delete </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
@@ -97,8 +99,10 @@
                                         <td>{{ Str::limit($data->description, 25, '...') }}</td>
                                         <td>{{ $data->status == 1 ? 'Active' : 'Deactive' }}</td>
                                         <td class="last">
-                                            <a href="{{ route('backend.banner.restore', $data->id) }}" class="btn btn-primary btn-sm">Restore</a>
-                                            <button value="{{ route('backend.banner.harddelete', $data->id) }}" id='delete' class="btn btn-danger btn-sm"> Hard Delete </button>
+                                            <a href="{{ route('backend.banner.restore', $data->id) }}"
+                                                class="btn btn-primary btn-sm">Restore</a>
+                                            <button value="{{ route('backend.banner.harddelete', $data->id) }}"
+                                                id='delete' class="btn btn-danger btn-sm"> Hard Delete </button>
                                         </td>
                                     </tr>
                                 @empty
@@ -129,7 +133,7 @@
 @endsection
 
 @section('backend_css')
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.4/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.4/sweetalert2.min.css">
 @endsection
 
 @section('backend_js')
@@ -141,7 +145,7 @@
 
         let url = $('#delete').val(); //JavaScript
 
-        $('#delete').on('click', function(){ //JQuary
+        $('#delete').on('click', function() { //JQuary
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -150,12 +154,11 @@
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
+            }).then((result) => {
                 if (result.isConfirmed) {
                     window.location.href = url; //return
                 }
             })
         })
-
     </script>
 @endsection
