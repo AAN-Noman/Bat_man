@@ -47,5 +47,8 @@ Route::name("backend.")->group(function(){
 
     //Product table route
     Route::resource('/product', ProductController::class)->except(["show"]);
+    Route::get('/product/hard/delete/{id}', [ProductController::class, 'harddelete'])->name('product.harddelete');
+    Route::get('/product/restore/{id}', [ProductController::class, 'restore'])->name('product.restore');
+
 });
 

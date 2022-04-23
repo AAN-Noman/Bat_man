@@ -25,8 +25,10 @@ class ProductController extends Controller
      */
     public function index()
     {
+        $DataTrashed = Product::with('sizes','colors','categories')->onlyTrashed()->get();
+
         $products = Product::with('sizes','colors','categories')->select("id",'title','price','sale_price','quantity','photo','status')->orderBy('created_at', 'desc')->get();
-        return view('backend.product.index', compact('products'));
+        return view('backend.product.index', compact('products','DataTrashed'));
     }
 
     /**
@@ -69,7 +71,7 @@ class ProductController extends Controller
 
             $photo_name = Str::slug($request->name)."_".time(). ".".$photo->getClientOriginalExtension();
 
-            $photo_upload =Image::make($photo)->crop(800, 609)->save(public_path('/storage/products/' . $photo_name));
+            $photo_upload = Image::make($photo)->crop(800, 609)->save(public_path('/storage/products/' . $photo_name));
 
             $product = new Product();
             $product->title = $request->name;
@@ -97,7 +99,7 @@ class ProductController extends Controller
             foreach ($gallery_photos as $gallery_photo){
                 $gallery_name = Str::slug($request->name)."_".uniqid().".".$gallery_photo->getClientOriginalExtension();
 
-                $photo_upload =Image::make($gallery_photo)->crop(800, 609)->save(public_path('/storage/gallery_image/' . $gallery_name));
+                $photo_upload = Image::make($gallery_photo)->crop(800, 609)->save(public_path('/storage/gallery_image/' . $gallery_name));
 
                 if($photo_upload){
                     $gallery = new ProductGallery();
@@ -131,7 +133,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+
+        return view('backend.product.edit', compact('product'));
     }
 
     /**
@@ -143,7 +146,39 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $this->validate($request, [
+            "name" => "required|unique:products,title,",
+            "price" => "numeric",
+            "quantity" => "numeric",
+            "sale_price" => "numeric",
+            "photo" => "mimes:png,jpg,gif,jpeg,webp|max:1024",
+        ]);
+        $photo = $request->file('photo');
+        if(!empty($photo)){
+
+            $photo_name = Str::slug($request->name)."_".time(). ".".$photo->getClientOriginalExtension();
+
+            $photo_upload = Image::make($photo)->crop(800, 609)->save(public_path('/storage/products/' . $photo_name));
+            $path = public_path('storage/products/'.$product->photo);
+                if(file_exists($path)){
+                    unlink($path);
+                }
+        }else{
+            $photo_name = $product->photo;
+        }
+
+            $product->title = $request->name;
+            $product->price = $request->price;
+            $product->sale_price = $request->sale_price;
+            $product->quantity = $request->quantity;
+            $product->short_description = $request->short_description;
+            $product->description = $request->description;
+            $product->additional_info = $request->additional_info;
+            $product->photo = $photo_name;
+            $product->save();
+
+            return redirect(route('backend.product.index'))->with('success', 'Product update successfully done!');
+
     }
 
     /**
@@ -154,6 +189,38 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        $product ->delete();
+        $product ->save();
+        return back()->with('success', 'Product destroy successfully done!');
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        $data = Product::onlyTrashed()->where('id', $id)->first();
+        $data->save();
+        $data->restore();
+        return back()->with('success', 'Status Updated!');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function harddelete($id)
+    {
+        $data = Product::onlyTrashed()->where('id', $id)->first();
+        $path = public_path('storage/products/'.$data->photo);
+        if(file_exists($path)){
+            unlink($path);
+        };
+        $data->forceDelete();
+        return back()->with('success', 'Delete Successfull!');
+    }
+
 }

@@ -25,6 +25,7 @@
                                 <div class="col-md-6  form-group">
                                     <label for="name">Product Name: </label>
                                     <input type="text" class="form-control" name="name" id="name" placeholder="Product Name" value="{{ old('name') }}">
+
                                     @error('name')
                                         <p class='text-danger'>{{ $message }}</p>
                                     @enderror
@@ -33,6 +34,7 @@
                                 <div class="col-md-6  form-group">
                                     <label>Photo</label>
                                     <input type="file" class="form-control" name='photo'>
+
                                     @error('photo')
                                         <p class='text-danger'>{{ $message }}</p>
                                     @enderror
@@ -41,6 +43,7 @@
                                 <div class="col-md-6  form-group">
                                     <label>Product Price: </label>
                                     <input type="text" class="form-control" name="price" placeholder="Price" value="{{ old('price') }}">
+                                    
                                     @error('price')
                                         <p class='text-danger'>{{ $message }}</p>
                                     @enderror
@@ -126,7 +129,9 @@
 
                                 <div class="col-md-12  form-group mb-4">
                                     <label>Gallery image: </label>
+
                                     <input type="file" class='form-control' name='gallery_photo[]' multiple>
+
                                     @error('gallery_photo')
                                         <p class='text-danger'>{{ $message }}</p>
                                     @enderror

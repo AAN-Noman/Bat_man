@@ -14,7 +14,7 @@ class Product extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['title','short_description','description','additional_info','price','sale_price'.'quantity',"photo"]; // for before chanege
+    protected $fillable = ["photo",'title','short_description','description','additional_info','price','sale_price','quantity',]; // for before chanege
 
     public function categories(){
             return $this->belongsToMany(Category::class)->withTimestamps();

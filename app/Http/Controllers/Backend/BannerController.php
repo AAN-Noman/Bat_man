@@ -96,8 +96,6 @@ class BannerController extends Controller
                 if(file_exists($path)){
                     unlink($path);
                 }
-
-
         }else{
             $photo_name = $banner->photo;
         }
@@ -162,7 +160,7 @@ class BannerController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function harddelete($id)
